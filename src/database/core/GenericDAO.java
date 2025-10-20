@@ -2,9 +2,6 @@ package database.core;
 
 import java.sql.*;
 
-/**
- * Classe générique DAO pour les opérations de base de données.
- */
 public class GenericDAO<T> {
     protected Connection connection;
     protected String tableName;
@@ -13,23 +10,20 @@ public class GenericDAO<T> {
         this.connection = connection;
         this.tableName = tableName;
     }
-
-    // ... autres méthodes ...
-
+    
     /**
-     * Compte le nombre total d'enregistrements dans la table.
-     * 
-     * @param condition La condition optionnelle pour filtrer les enregistrements.
-     * @return Le nombre d'enregistrements.
-     * @throws SQLException en cas d'erreur SQL.
+     * Compte le nombre total d'enregistrements dans la table avec ou sans condition.
+     * @param condition une condition SQL pour filtrer les enregistrements
+     * @return Le nombre d'enregistrements
+     * @throws SQLException en cas d'erreur SQL
      */
     public long count(String condition) throws SQLException {
-        String query = "SELECT COUNT(*) FROM " + tableName;
+        String sql = "SELECT COUNT(*) FROM " + tableName;
         if (condition != null && !condition.isEmpty()) {
-            query += " WHERE " + condition;
+            sql += " WHERE " + condition;
         }
-
-        try (PreparedStatement stmt = connection.prepareStatement(query);
+        
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 return rs.getLong(1);
@@ -37,10 +31,6 @@ public class GenericDAO<T> {
             return 0;
         }
     }
-
-    public long count() throws SQLException {
-        return count(null);
-    }
-
-    // ... reste du code existant ...
+    
+    // Autres méthodes existantes...
 }

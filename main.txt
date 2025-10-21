@@ -6,8 +6,13 @@ Le projet comprend également des tests unitaires pour valider les fonctionnalit
 
 ## Caractéristiques clés
 
-- **Connexion à la base de données**: Utilisation d'une classe fictive `DBConnection` pour gérer les connexions.
-- **DAO générique**: Une classe `GenericDAO` qui offre des méthodes paramétriques pour manipuler des entités de la base de données.
-- **Test unitaire**: Tests utilisant JUnit et Mockito pour assurer la robustesse des opérations de base de données et garantir qu'elles fonctionnent comme prévu.
+- **Connexion à la base de données**: Utilisation d'une classe fictive `DBConnection` pour illustrer la connexion à une base de données.
+- **DAO Générique**: La classe `GenericDAO` permet des opérations de base sur des entités génériques.
+- **Entité `Money`**: Un exemple d'entité utilisée pour montrer l'interaction avec la base de données.
+- **Tests Unitaires**: Implémentation de tests avec JUnit et Mockito pour assurer la validité du code.
 
-L'objectif principal de ce projet est d'illustrer comment structurer une application simple qui interagit avec une base de données tout en utilisant de bonnes pratiques de test.
+## Objectifs du Projet
+
+- Illustrer l'utilisation des DAO pour la gestion des données.
+- Démontrer la manière d'implémenter des tests unitaires robustes.
+- Fournir une base de code réutilisable pour des projets similaires.

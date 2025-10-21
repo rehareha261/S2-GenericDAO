@@ -1,0 +1,13 @@
+# Résumé du Projet
+
+Ce projet est une application de démonstration mettant en œuvre une interaction de base avec une base de données via un DAO générique. 
+Il inclut une classe `Main` qui initialise une connexion à une base de données imaginaire et la constitue avec un exemple d'entité `Money`. 
+Le projet comprend également des tests unitaires pour valider les fonctionnalités implémentées.
+
+## Caractéristiques clés
+
+- **Connexion à la base de données**: Utilisation d'une classe fictive `DBConnection` pour gérer les connexions.
+- **DAO générique**: Une classe `GenericDAO` qui offre des méthodes paramétriques pour manipuler des entités de la base de données.
+- **Test unitaire**: Tests utilisant JUnit et Mockito pour assurer la robustesse des opérations de base de données et garantir qu'elles fonctionnent comme prévu.
+
+L'objectif principal de ce projet est d'illustrer comment structurer une application simple qui interagit avec une base de données tout en utilisant de bonnes pratiques de test.

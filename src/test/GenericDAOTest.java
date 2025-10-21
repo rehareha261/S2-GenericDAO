@@ -1,60 +1,62 @@
 package test;
 
-import database.core.GenericDAO;
 import database.core.DBConnection;
-import org.junit.jupiter.api.Test;
+import database.core.GenericDAO;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class GenericDAOTest {
+class GenericDAOTest {
 
+    private DBConnection dbConnection;
     private Connection mockConnection;
-    private GenericDAO<Money> mockMoneyDAO;
-    private PreparedStatement mockStatement;
-    private ResultSet mockResultSet;
+    private GenericDAO<Object> dao;
 
     @BeforeEach
-    public void setUp() throws SQLException {
+    void setUp() {
         mockConnection = mock(Connection.class);
-        mockMoneyDAO = new GenericDAO<>(mockConnection, "Money");
-        mockStatement = mock(PreparedStatement.class);
-        mockResultSet = mock(ResultSet.class);
-        
+        dbConnection = new DBConnection(null, mockConnection);
+        dao = new GenericDAO<>(dbConnection, "test_table");
+    }
+
+    @Test
+    void testFindFirst() throws SQLException {
+        String condition = "id = 1";
+        PreparedStatement mockStatement = mock(PreparedStatement.class);
+        ResultSet mockResultSet = mock(ResultSet.class);
+
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
         when(mockStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true).thenReturn(false);
+        // Supposons que mapToEntity renvoie le même objet à des fins de test
+        when(mockResultSet.getObject(anyString())).thenReturn(new Object());
+
+        Optional<Object> result = dao.findFirst(condition);
+
+        assertTrue(result.isPresent());
+        verify(mockStatement).executeQuery();
     }
 
     @Test
-    public void testCountWithoutCondition() throws SQLException {
-        when(mockResultSet.next()).thenReturn(true);
-        when(mockResultSet.getLong(1)).thenReturn(100L);
+    void testFindFirstNoResult() throws SQLException {
+        String condition = "id = 2";
+        PreparedStatement mockStatement = mock(PreparedStatement.class);
+        ResultSet mockResultSet = mock(ResultSet.class);
 
-        long count = mockMoneyDAO.count(null);
-        Assertions.assertEquals(100L, count);
-    }
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
+        when(mockStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(false);
 
-    @Test
-    public void testCountWithCondition() throws SQLException {
-        when(mockResultSet.next()).thenReturn(true);
-        when(mockResultSet.getLong(1)).thenReturn(50L);
+        Optional<Object> result = dao.findFirst(condition);
 
-        String condition = "amount > 1000";
-        long count = mockMoneyDAO.count(condition);
-        Assertions.assertEquals(50L, count);
-    }
-
-    @AfterEach
-    public void tearDown() throws SQLException {
-        mockStatement.close();
-        mockResultSet.close();
+        assertFalse(result.isPresent());
+        verify(mockStatement).executeQuery();
     }
 }

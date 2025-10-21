@@ -1,33 +1,46 @@
 package database.core;
 
 import java.sql.*;
+import java.util.Optional;
 
 public class GenericDAO<T> {
-    private Connection connection;
+    private DBConnection dbConnection;
     private String tableName;
 
-    public GenericDAO(Connection connection, String tableName) {
-        this.connection = connection;
+    public GenericDAO(DBConnection dbConnection, String tableName) {
+        this.dbConnection = dbConnection;
         this.tableName = tableName;
     }
 
     /**
-     * Compte le nombre total d'enregistrements dans la table avec une condition optionnelle
-     * @param condition La condition SQL à appliquer (peut être null ou vide si aucune condition n'est nécessaire)
-     * @return Le nombre d'enregistrements
+     * Récupère le premier enregistrement correspondant à une condition donnée.
+     * @param condition La condition SQL sous forme de chaîne de caractères
+     * @return Un Optional contenant le premier enregistrement correspondant, ou un Optional vide si aucun enregistrement n'est trouvé
      * @throws SQLException en cas d'erreur SQL
      */
-    public long count(String condition) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM " + tableName;
-        if (condition != null && !condition.trim().isEmpty()) {
-            sql += " WHERE " + condition;
-        }
-        try (PreparedStatement stmt = connection.prepareStatement(sql);
+    public Optional<T> findFirst(String condition) throws SQLException {
+        String sql = "SELECT * FROM " + tableName + " WHERE " + condition + " LIMIT 1";
+        try (PreparedStatement stmt = dbConnection.getConnection().prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
-                return rs.getLong(1);
+                // Supposons qu'il existe une méthode pour mapper ResultSet à l'objet T
+                T result = mapToEntity(rs);
+                return Optional.of(result);
             }
-            return 0;
+            return Optional.empty();
         }
     }
+
+    /**
+     * Méthode fictive pour mapper un ResultSet à une instance de T
+     * @param rs le ResultSet à mapper
+     * @return une instance de T
+     * @throws SQLException en cas d'erreur SQL
+     */
+    private T mapToEntity(ResultSet rs) throws SQLException {
+        // Logique de mapping à implémenter selon les besoins
+        return null;
+    }
+
+    // Autres méthodes de GenericDAO...
 }

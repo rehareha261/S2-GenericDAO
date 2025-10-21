@@ -1,0 +1,4 @@
+Ce projet est une application de gestion de base de données utilisant un DAO générique. 
+Elle permet de se connecter à une base de données, de manipuler des données de manière générique à l'aide de la classe GenericDAO.
+Le projet inclut également des tests unitaires pour assurer la fiabilité des opérations de base de données.
+L'objectif principal est de simplifier l'accès aux données et de fournir une architecture modulaire et extensible.
